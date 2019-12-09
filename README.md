@@ -37,10 +37,10 @@ Make sure that the following dependencies are installed/present on the server wh
 
 1. On the server where this will run create a working folder eg 'webhook_handler'.
 2. Place the jar file created above under this folder.
-2. Under this folder create a folder called `config` and `logs`.
-3. Copy the file `/zlmt-webhook-handler/src/main/resources/application.properties` to this config folder.
-4. Edit the application.properties file to update the My SQL configuration parameters.
-5. Run the jar as a background service with Windows Service Wrapper using the following XML:
+3. Under this folder create a folder called `config` and `logs`.
+4. Copy the file `/zlmt-webhook-handler/src/main/resources/application.properties` to this config folder.
+5. Edit the application.properties file to update the MySQL configuration parameters and the third party API details.
+6. Run the jar as a background service with Windows Service Wrapper using the following XML:
 
 	```
 	<service>

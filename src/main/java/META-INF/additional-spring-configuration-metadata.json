@@ -1,0 +1,13 @@
+{"properties": [{
+  "name": "taxi-api.username",
+  "type": "java.lang.String",
+  "description": "User Name for the third party API"
+},{
+  "name": "taxi-api.password",
+  "type": "java.lang.String",
+  "description": "User Password for the third party API"
+},{
+  "name": "taxi-api.url",
+  "type": "java.lang.String",
+  "description": "URL for the third party API"
+}]}
