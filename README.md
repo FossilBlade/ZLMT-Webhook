@@ -49,7 +49,7 @@ Make sure that the following dependencies are installed/present on the server wh
 	    <description>Webhook Handler for ZLMT</description>
 	    <env name="MYAPP_HOME" value="%BASE%"/>
 	    <executable>java</executable>
-	    <arguments>-Xmx512m -classpath "%BASE%\config" -jar "%BASE%\zlmt-webhook-handler-1.0.0.jar"</arguments>
+	    <arguments>-Xmx512m -Dspring.config.location="%BASE%\config\application.properties" -jar "%BASE%\zlmt-webhook-handler-1.0.0.jar"</arguments>
 	    <logmode>rotate</logmode>
 	</service>
 	``` 
