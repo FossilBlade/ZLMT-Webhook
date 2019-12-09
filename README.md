@@ -56,7 +56,9 @@ Make sure that the following dependencies are installed/present on the server wh
 
 To Know more about how to run a java app as a service on indows please visit: [Run Java As Service On Windows](https://www.baeldung.com/spring-boot-app-as-a-service#1-windows-service-wrapper)
 
-  
+### ACCESSING THE SERVICE
+
+The service is accessible at location 'http://localhost:8080'
 
 
 
