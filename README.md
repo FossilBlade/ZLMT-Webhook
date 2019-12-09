@@ -14,8 +14,9 @@ It is a springboot based REST API, which exposes the following endpoints, to han
 
 Make sure that the following dependencies are installed/present on the server where the code will be compiled and run:
 
-1. Java 1.8+
-2. Availability of Internet to Call the third party API.
+1. Java 1.8+ : Required on the server where the service will be running
+2. JDK 1.8+ : Required on the server where the code will be compiled.
+3. Availability of Internet to Call the third party API and to compile the code.
 
 ### Compile the jar
 
