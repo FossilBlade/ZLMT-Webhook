@@ -50,7 +50,7 @@ public class Controller {
 			String jsonString = "{\r\n" + "  \"jsonrpc\": \"2.0\",\r\n" + "  \"method\": \"driver.profile\",\r\n"
 					+ "  \"params\": {\r\n" + "    \"driver_id\": %s\r\n" + "    \r\n" + "    \r\n" + "  }\r\n" + "}";
 
-			LOG.info("Fetching driver with ID '%s' from third party API: " + id);
+			LOG.debug("Fetching driver with ID '%s' from third party API: " + id);
 			JsonNode param_data = getApiResponseParam(id, jsonString);
 
 			if (param_data.size() == 0) {
@@ -81,7 +81,7 @@ public class Controller {
 					+ "  \"params\": {\r\n" + "    \r\n" + "    \"filters\": {\r\n"
 					+ "      \"phone_number\": \"%s\"\r\n" + "    }\r\n" + "    \r\n" + "  }\r\n" + "}\r\n" + "";
 
-			LOG.info("Fetching client with phone number '%s' from third party API: " + phone);
+			LOG.debug("Fetching client with phone number '%s' from third party API: " + phone);
 			JsonNode param_data = getApiResponseParam(phone, jsonString);
 
 			JsonNode clients = param_data.get("clients");
@@ -119,7 +119,7 @@ public class Controller {
 					+ "  \"params\": {\r\n" + "    \r\n" + "    \"filters\": {\r\n" + "      \"id\": %s\r\n"
 					+ "    }\r\n" + "    \r\n" + "  }\r\n" + "}\r\n" + "";
 
-			LOG.info("Fetching order with ID '%s' from third party API: " + id);
+			LOG.debug("Fetching order with ID '%s' from third party API: " + id);
 			JsonNode param_data = getApiResponseParam(id, jsonString);
 
 			if (param_data.size() == 0) {
