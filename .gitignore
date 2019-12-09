@@ -27,6 +27,6 @@ target/
 /.nb-gradle/
 build/
 bin/
-
+logs/
 ### VS Code ###
 .vscode/
