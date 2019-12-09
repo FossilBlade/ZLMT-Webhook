@@ -195,9 +195,17 @@ public class HandlerController {
 		JsonNode param_data = getApiResponseParam("dummy", req);
 
 		for (JsonNode api_driver_session : param_data) {
-			Long driver_id = api_driver_session.get("driver_id").asLong();
-			processDriver("driverId=" + driver_id.toString());
 
+			Long driver_id = api_driver_session.get("driver_id").asLong();
+
+			try {
+				if (driverRepository.existsById(driver_id) == false) {
+
+					processDriver("driverId=" + driver_id.toString());
+				}
+			} catch (Exception ex) {
+				LOG.error("Error saving driver with id: " + driver_id.toString(), ex);
+			}
 		}
 
 	}

@@ -35,8 +35,8 @@ public class Address {
 	public Long parkingId;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumns({ @JoinColumn(name = "lat", insertable = true, updatable = false),
-			@JoinColumn(name = "lng", insertable = true, updatable = false) })
+	@JoinColumns({ @JoinColumn(name = "lat", insertable = true, updatable = true),
+			@JoinColumn(name = "lng", insertable = true, updatable = true) })
 	@JsonProperty("latlng")
 	public Latlng latlng;
 
