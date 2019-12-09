@@ -40,14 +40,7 @@ public class HandlerController {
 	@Autowired
 	ClientRepository clientRepository;
 
-	@RequestMapping(value = "/", method = RequestMethod.GET, produces = "text/html")
-	public String home() throws Exception {
-
-		return "<html><body><h1>ZLMT Webhook Handler is running.</h1><p>Use the handler endpoints to save the data.</p></body><html>";
-
-	}
-
-	@RequestMapping(value = "/driver", method = RequestMethod.POST, consumes = "text/plain")
+	@RequestMapping(value = "/driver", method = RequestMethod.POST)
 	public Driver processDriver(@RequestBody String payload) throws Exception {
 		LOG.info("Payload recieved for Driver: " + payload);
 
@@ -78,7 +71,7 @@ public class HandlerController {
 
 	}
 
-	@RequestMapping(value = "/client", method = RequestMethod.POST, consumes = "text/plain")
+	@RequestMapping(value = "/client", method = RequestMethod.POST)
 	public Client processClinet(@RequestBody String payload) throws Exception {
 		LOG.info("Payload recieved for Client: " + payload);
 		if (payload.toLowerCase().startsWith("phone") && isPayLoadFormatValid(payload)) {
@@ -116,7 +109,7 @@ public class HandlerController {
 
 	}
 
-	@RequestMapping(value = "/order", method = RequestMethod.POST, consumes = "text/plain")
+	@RequestMapping(value = "/order", method = RequestMethod.POST)
 	public Order orderProcess(@RequestBody String payload) throws Exception {
 		LOG.info("Payload recieved for Order: " + payload);
 		if (payload.toLowerCase().startsWith("order") && isPayLoadFormatValid(payload)) {
@@ -178,7 +171,7 @@ public class HandlerController {
 				&& payload.toLowerCase().split("=")[1].matches("(0|[1-9]\\d*)");
 	}
 
-	@RequestMapping(value = "/syncall", method = RequestMethod.POST, consumes = "text/plain")
+	@RequestMapping(value = "/syncall", method = RequestMethod.POST)
 	public void processAll() throws Exception {
 		LOG.info("Saving/Updating all the previous data.");
 		saveAllDrivers();
