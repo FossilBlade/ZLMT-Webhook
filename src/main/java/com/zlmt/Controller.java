@@ -1,5 +1,7 @@
 package com.zlmt;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,7 @@ import com.zlmt.repo.OrderRepository;
 @RestController
 @RequestMapping("/handler")
 public class Controller {
+	private static final Logger LOG = LoggerFactory.getLogger(CommandLineAppStartupRunner.class);
 
 	ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
@@ -39,6 +42,7 @@ public class Controller {
 
 	@RequestMapping(value = "/driver", method = RequestMethod.POST, consumes = "text/plain")
 	public Driver processDriver(@RequestBody String payload) throws Exception {
+		LOG.info("Payload recieved for Driver: " + payload);
 
 		if (payload.toLowerCase().startsWith("driver") && isPayLoadFormatValid(payload)) {
 
@@ -46,9 +50,11 @@ public class Controller {
 			String jsonString = "{\r\n" + "  \"jsonrpc\": \"2.0\",\r\n" + "  \"method\": \"driver.profile\",\r\n"
 					+ "  \"params\": {\r\n" + "    \"driver_id\": %s\r\n" + "    \r\n" + "    \r\n" + "  }\r\n" + "}";
 
+			LOG.info("Fetching driver with ID '%s' from third party API: " + id);
 			JsonNode param_data = getApiResponseParam(id, jsonString);
 
 			if (param_data.size() == 0) {
+				LOG.error("No Driver Found by ID: " + id);
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No Driver Found by ID: " + id);
 
 			}
@@ -58,7 +64,7 @@ public class Controller {
 			return driverRepository.save(driver);
 
 		} else {
-
+			LOG.error("Request not in format 'driverId=456'");
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Request not in format 'driverId=456'");
 
 		}
@@ -67,7 +73,7 @@ public class Controller {
 
 	@RequestMapping(value = "/client", method = RequestMethod.POST, consumes = "text/plain")
 	public Client processClinet(@RequestBody String payload) throws Exception {
-
+		LOG.info("Payload recieved for Client: " + payload);
 		if (payload.toLowerCase().startsWith("phone") && isPayLoadFormatValid(payload)) {
 
 			String phone = payload.split("=")[1];
@@ -75,11 +81,13 @@ public class Controller {
 					+ "  \"params\": {\r\n" + "    \r\n" + "    \"filters\": {\r\n"
 					+ "      \"phone_number\": \"%s\"\r\n" + "    }\r\n" + "    \r\n" + "  }\r\n" + "}\r\n" + "";
 
+			LOG.info("Fetching client with phone number '%s' from third party API: " + phone);
 			JsonNode param_data = getApiResponseParam(phone, jsonString);
 
 			JsonNode clients = param_data.get("clients");
 
 			if (clients.size() == 0) {
+				LOG.error("No Cilent Found by Phone: " + phone);
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No Cilent Found by Phone: " + phone);
 
 			} else {
@@ -93,7 +101,7 @@ public class Controller {
 			}
 
 		} else {
-
+			LOG.error("Request not in format 'phone number=25191040000'");
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					"Request not in format 'phone number=25191040000'");
 
@@ -103,7 +111,7 @@ public class Controller {
 
 	@RequestMapping(value = "/order", method = RequestMethod.POST, consumes = "text/plain")
 	public Order orderProcess(@RequestBody String payload) throws Exception {
-
+		LOG.info("Payload recieved for Order: " + payload);
 		if (payload.toLowerCase().startsWith("order") && isPayLoadFormatValid(payload)) {
 
 			String id = payload.split("=")[1];
@@ -111,9 +119,11 @@ public class Controller {
 					+ "  \"params\": {\r\n" + "    \r\n" + "    \"filters\": {\r\n" + "      \"id\": %s\r\n"
 					+ "    }\r\n" + "    \r\n" + "  }\r\n" + "}\r\n" + "";
 
+			LOG.info("Fetching order with ID '%s' from third party API: " + id);
 			JsonNode param_data = getApiResponseParam(id, jsonString);
 
 			if (param_data.size() == 0) {
+				LOG.error("No Order Found by ID: " + id);
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No Order Found by ID: " + id);
 
 			}
@@ -126,11 +136,12 @@ public class Controller {
 
 				return orderRepository.save(order);
 			} else {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No Order Found by ID: " + id);
+				LOG.error("Returned Param is not an array");
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Returned Param is not an array");
 			}
 
 		} else {
-
+			LOG.error("Request not is format 'orderId=456'");
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Request not is format 'orderId=456'");
 
 		}
@@ -140,12 +151,16 @@ public class Controller {
 	private JsonNode getApiResponseParam(String id, String requestTemplate)
 			throws JsonMappingException, JsonProcessingException {
 		String requestString = String.format(requestTemplate, id);
+		LOG.debug("Request data being sent: " + requestString);
 
 		JsonNode requestObj = mapper.readTree(requestString);
 
 		ResponseEntity<String> result = restTemplate.postForEntity("/", requestObj, String.class);
 
-		JsonNode res = mapper.readTree(result.getBody());
+		String resString = result.getBody();
+		LOG.debug("Response recieved: " + resString);
+
+		JsonNode res = mapper.readTree(resString);
 
 		return res.get("params");
 
@@ -158,10 +173,11 @@ public class Controller {
 
 	@RequestMapping(value = "/syncall", method = RequestMethod.POST, consumes = "text/plain")
 	public void processAll() throws Exception {
-
+		LOG.info("Saving/Updating all the previous data.");
 		saveAllDrivers();
 		saveAllClients();
 		saveAllOrders();
+		LOG.info("All previous data saved/updated successfully.");
 
 	}
 

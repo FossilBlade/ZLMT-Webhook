@@ -15,6 +15,8 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
+
 		controller.processAll();
+
 	}
 }
