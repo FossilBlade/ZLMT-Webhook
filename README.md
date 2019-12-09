@@ -27,8 +27,7 @@ Make sure that the following dependencies are installed/present on the server wh
 3. Run the following commands to build the jar:
 	```
 	chmod +x mvnw
-	./mvnw clean install
-		
+	./mvnw clean install		
 	```
 4. Once the above commands is successfull, it will generate the jar under target folder, called 'zlmt-webhook-handler-1.0.0.jar'.
 
