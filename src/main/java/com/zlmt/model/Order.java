@@ -138,7 +138,7 @@ public class Order {
 
 	@JsonProperty("pickup_address")
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumns({ @JoinColumn(name = "locality_id", insertable = true, updatable = false),
+	@JoinColumns({ @JoinColumn(name = "locality_id", insertable = true, updatable = true),
 			@JoinColumn(name = "street", insertable = true, updatable = false) })
 	public Address pickupAddress;
 
