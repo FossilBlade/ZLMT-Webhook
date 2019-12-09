@@ -11,7 +11,7 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
 	private static final Logger LOG = LoggerFactory.getLogger(CommandLineAppStartupRunner.class);
 
 	@Autowired
-	Controller controller;
+	HandlerController controller;
 
 	@Override
 	public void run(String... args) throws Exception {

@@ -26,7 +26,7 @@ import com.zlmt.repo.OrderRepository;
 
 @RestController
 @RequestMapping("/handler")
-public class Controller {
+public class HandlerController {
 	private static final Logger LOG = LoggerFactory.getLogger(CommandLineAppStartupRunner.class);
 
 	ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -39,6 +39,13 @@ public class Controller {
 	OrderRepository orderRepository;
 	@Autowired
 	ClientRepository clientRepository;
+
+	@RequestMapping(value = "/", method = RequestMethod.GET, produces = "text/html")
+	public String home() throws Exception {
+
+		return "<html><body><h1>ZLMT Webhook Handler is running.</h1><p>Use the handler endpoints to save the data.</p></body><html>";
+
+	}
 
 	@RequestMapping(value = "/driver", method = RequestMethod.POST, consumes = "text/plain")
 	public Driver processDriver(@RequestBody String payload) throws Exception {
