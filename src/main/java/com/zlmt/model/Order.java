@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -11,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -46,10 +48,10 @@ public class Order {
 	public Long operatorSessionId;
 
 	@JsonProperty("price")
-	public Long price;
+	public Double price;
 
 	@JsonProperty("done_price")
-	public Long donePrice;
+	public Double donePrice;
 
 	@JsonProperty("contragent_id")
 	public Long contragentId;
@@ -77,35 +79,43 @@ public class Order {
 	@JsonProperty("driver_extras")
 	public List<Long> driverExtras = null;
 
-	@Temporal(TemporalType.DATE)
+	@Column(columnDefinition = "DATETIME")
+	@Temporal(TemporalType.TIMESTAMP)
 	@JsonProperty("pickup_time")
 	public Date pickupTime;
 
-	@Temporal(TemporalType.DATE)
+	@Column(columnDefinition = "DATETIME")
+	@Temporal(TemporalType.TIMESTAMP)
 	@JsonProperty("create_time")
 	public Date createTime;
 
-	@Temporal(TemporalType.DATE)
+	@Column(columnDefinition = "DATETIME")
+	@Temporal(TemporalType.TIMESTAMP)
 	@JsonProperty("accept_time")
 	public Date acceptTime;
 
-	@Temporal(TemporalType.DATE)
+	@Column(columnDefinition = "DATETIME")
+	@Temporal(TemporalType.TIMESTAMP)
 	@JsonProperty("car_delivery_time")
 	public Date carDeliveryTime;
 
-	@Temporal(TemporalType.DATE)
+	@Column(columnDefinition = "DATETIME")
+	@Temporal(TemporalType.TIMESTAMP)
 	@JsonProperty("done_time")
 	public Date doneTime;
 
-	@Temporal(TemporalType.DATE)
+	@Column(columnDefinition = "DATETIME")
+	@Temporal(TemporalType.TIMESTAMP)
 	@JsonProperty("cancel_time")
 	public Date cancelTime;
 
-	@Temporal(TemporalType.DATE)
+	@Column(columnDefinition = "DATETIME")
+	@Temporal(TemporalType.TIMESTAMP)
 	@JsonProperty("wait_client_time")
 	public Date waitClientTime;
 
-	@Temporal(TemporalType.DATE)
+	@Column(columnDefinition = "DATETIME")
+	@Temporal(TemporalType.TIMESTAMP)
 	@JsonProperty("with_client_time")
 	public Date withClientTime;
 
@@ -113,13 +123,13 @@ public class Order {
 	public Long drivingTime;
 
 	@JsonProperty("discount_price")
-	public Long discountPrice;
+	public Double discountPrice;
 
 	@JsonProperty("discount_percent")
-	public Long discountPercent;
+	public Double discountPercent;
 
 	@JsonProperty("discount_driver_compensation")
-	public Long discountDriverCompensation;
+	public Double discountDriverCompensation;
 
 	@JsonProperty("loyalty_rule_id")
 	public Long loyaltyRuleId;
@@ -139,7 +149,7 @@ public class Order {
 	@JsonProperty("pickup_address")
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumns({ @JoinColumn(name = "locality_id", insertable = true, updatable = true),
-			@JoinColumn(name = "street", insertable = true, updatable = false) })
+			@JoinColumn(name = "street", insertable = true, updatable = true) })
 	public Address pickupAddress;
 
 	@JsonProperty("destinations")
@@ -165,10 +175,8 @@ public class Order {
 	@JsonProperty("dispatch_state")
 	public Long dispatchState;
 
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "order_client_notification", joinColumns = {
-			@JoinColumn(name = "order_id") }, inverseJoinColumns = { @JoinColumn(name = "orderState"),
-					@JoinColumn(name = "state") })
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "order_id")
 	@JsonProperty("client_notifications")
 	public List<ClientNotification> clientNotifications = null;
 
@@ -180,9 +188,9 @@ public class Order {
 	public Long markupRuleId;
 
 	@JsonProperty("markup_price")
-	public Long markupPrice;
+	public Double markupPrice;
 
 	@JsonProperty("markup_percent")
-	public Long markupPercent;
+	public Double markupPercent;
 
 }

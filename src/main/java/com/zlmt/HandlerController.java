@@ -1,5 +1,7 @@
 package com.zlmt;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,6 +24,7 @@ import com.zlmt.model.Order;
 import com.zlmt.repo.ClientRepository;
 import com.zlmt.repo.DriverRepository;
 import com.zlmt.repo.OrderRepository;
+import com.zlmt.service.APIService;
 
 @RestController
 @RequestMapping("/handler")
@@ -32,7 +34,8 @@ public class HandlerController {
 	ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
 	@Autowired
-	RestTemplate restTemplate;
+	APIService apiService;
+
 	@Autowired
 	DriverRepository driverRepository;
 	@Autowired
@@ -155,7 +158,7 @@ public class HandlerController {
 
 		JsonNode requestObj = mapper.readTree(requestString);
 
-		ResponseEntity<String> result = restTemplate.postForEntity("/", requestObj, String.class);
+		ResponseEntity<String> result = apiService.postToApi(requestObj);
 
 		String resString = result.getBody();
 		LOG.debug("Response recieved: " + resString);
@@ -212,7 +215,11 @@ public class HandlerController {
 		JsonNode clients = param_data.get("clients");
 		for (JsonNode api_client : clients) {
 			Client client = mapper.treeToValue(api_client, Client.class);
-			clientRepository.save(client);
+			Long clinetId = client.getId();
+			if (clientRepository.existsById(clinetId) == false) {
+				LOG.info("Adding new new client: " + clinetId.toString());
+				clientRepository.save(client);
+			}
 		}
 	}
 
@@ -220,12 +227,21 @@ public class HandlerController {
 
 		String req = "{\r\n" + "  \"jsonrpc\": \"2.0\",\r\n" + "  \"method\": \"order.list\"\r\n" + "}";
 
-		JsonNode param_data = getApiResponseParam("dummy", req);
+		JsonNode new_param_data = getApiResponseParam("dummy", req);
+		List<Order> orders = orderRepository.getOrderIdByDoneTimeAndCancelTime(null, null);
 
-		for (JsonNode api_order : param_data) {
+		for (JsonNode api_order : new_param_data) {
+
 			Order order = mapper.treeToValue(api_order, Order.class);
+			LOG.info("Adding new orders: " + order.getOrderId().toString());
 			orderRepository.save(order);
 		}
+
+		for (Order order : orders) {
+			orderProcess("orderSyncAllId=" + order.getOrderId().toString());
+
+		}
+
 	}
 
 }
