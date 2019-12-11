@@ -30,3 +30,7 @@ bin/
 logs/
 ### VS Code ###
 .vscode/
+
+
+
+.attach*
